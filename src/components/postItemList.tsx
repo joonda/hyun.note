@@ -1,21 +1,21 @@
 import Link from "next/link";
-import { postItem } from "@/lib/posts";
+import { PostDesc } from "@/type/types"
 
-interface Props {
-  post: postItem[]
-}
+const PostItemList = ({ postlist }: { postlist: PostDesc[] }) => {
 
-const PostItemList = ({ post }: Props) => {
   return (
+
     <div>
       {
-        post.map((item) => {
+        postlist.map((item) => {
+
           return (
+            
             <div key={item.id}>
               <Link href={`/${item.id}`}>
                 {item.title}
               </Link>
-              <p>{item.date}</p>
+              <p>{item.date.toLocaleDateString()}</p>
               <p>{item.category}</p>
             </div>
           )
@@ -24,5 +24,4 @@ const PostItemList = ({ post }: Props) => {
     </div>
   )
 }
-
 export default PostItemList

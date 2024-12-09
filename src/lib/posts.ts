@@ -2,57 +2,67 @@ import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
 import { serialize } from "next-mdx-remote/serialize";
-import { MDXRemoteSerializeResult } from "next-mdx-remote";
+import { AllPostContents, PostDesc } from "@/type/types"
 
-// find post directory
+
+// 마크다운 포스트 경로 지정
 const postsDirectory = path.join(process.cwd(), 'src', "posts")
 
-// Define post Item type
-export type postItem = {
-    id: string;
-    title: string;
-    date: string;
-    category: string;
-    contentHtml?: MDXRemoteSerializeResult;
-}
-
-// getPostList
-export const getPostList = async () => {
+// 글 목록을 가져오기 위한 함수 지정
+export const getPostList = async (): Promise<PostDesc[]> => {
+    // postsDirectory 안에 있는 마크다운 파일을 가져옴
+    // 배열 형태
     const fileNames = fs.readdirSync(postsDirectory);
-    const allPostData = fileNames.map((fileName) => {
-        const id = fileName.replace(/\.mdx$/, "");
-        const fullPath = path.join(postsDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, 'utf-8');
-        const { data } = matter(fileContents);
 
-        return {
+    // map 함수 활용
+    const allPostData = fileNames.map((fileName) => {
+
+        // .mdx 확장자 제거 (id로 사용.)
+        const id = fileName.replace(/\.mdx$/, "");
+
+        // path.join 활용 마크다운 포스트 가져옴.
+        // src/posts/@@@.mdx
+        const fullPath = path.join(postsDirectory, fileName);
+
+        // path 안에 있는 마크다운 파일들 순차적으로 read.
+        const fileContents = fs.readFileSync(fullPath, 'utf-8');
+
+        // matter 활용, description (YAML 파일)
+        const { data } = matter(fileContents);
+        
+        // any 타입을 막기위해 type 지정 (all string.)
+        const postList: PostDesc = {
             id,
             title: data.title,
-            date: data.date,
+            date: new Date (data.date),
             category: data.category
         };
+
+        return postList;
     });
 
     return allPostData;
 }
 
-export const getPostData = async (slug: string): Promise<postItem> => {
+// slug를 받아 포스트의 상세페이지를 반환하는 함수.
+export const getPostDetail = async (slug: string): Promise<AllPostContents> => {
 
-    // read file in posts Directory folder 
-    // [@@@@.mdx, @@@.mdx, ...]
-
+    // 슬러그와 포스트 디렉토리 경로 결합, 전체 파일 경로 만듦.
     const fullPath = path.join(postsDirectory, `${slug}.mdx`)
 
+    // 디렉토리 안에있는 mdx 파일을 읽음.
     const fileContents = fs.readFileSync(fullPath, 'utf-8')
 
+    // gray-matter 활용, data, content 반환.
     const { data, content } = matter(fileContents)
 
+    // mdx 콘텐츠를 html로 변환, 렌더링 준비
     const mdxSource = await serialize(content)
 
     return {
-        id : slug,
+        id: slug,
         title: data.title,
-        date: data.date,
+        date: new Date (data.date),
         category: data.category,
         contentHtml: mdxSource
     }

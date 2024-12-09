@@ -3,7 +3,7 @@ import { getPostList } from "@/lib/posts";
 
 export default async function Main() {
 
-  const post = await getPostList();
+  const postlist = await getPostList();
 
   return (
     <section className="mx-auto w-11/12 md:w-1/2 mt-20 flex flex-col gap-16 mb-20">
@@ -11,7 +11,7 @@ export default async function Main() {
         <h1>minimal blog</h1>
       </header>
       <section className="md:grid md:grid-cols-2 flex flex-col gap-10">
-        <PostItemList post={post} />
+        <PostItemList postlist={postlist} />
       </section>
     </section>
   )
