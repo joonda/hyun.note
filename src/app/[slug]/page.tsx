@@ -1,10 +1,10 @@
 import Link from "next/link"
-import { getArticleData } from "@/lib/articles"
+import { getPostData } from "@/lib/posts"
+import MDXContent from "@/components/postContent"
 
-const Article = async ({ params }: { params: { slug: string } }) => {
+const PostDetail = async ({ params }: { params: { slug: string } }) => {
     const { slug } = params;
-    const articleData = await getArticleData(slug);
-
+    const articleData = await getPostData(slug);
     return (
         <section className="mx-auto w-10/12 md:w-1/2 mt-20 flex flex-col gap-5">
             <div className="flex justify-between font-poppins">
@@ -13,11 +13,11 @@ const Article = async ({ params }: { params: { slug: string } }) => {
                 </Link>
                 <p>{articleData.date.toString()}</p>
             </div>
-            <article
-                className="article"
-            />
+            <article>
+                <MDXContent source={articleData.contentHtml!} />
+            </article>
         </section>
     )
 }
 
-export default Article
+export default PostDetail

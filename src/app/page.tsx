@@ -1,8 +1,9 @@
-import ArticleItemList from "@/components/ui/ArticleListItem"
-import { getCategoriesdArticles } from "@/lib/articles"
+import PostItemList from "@/components/postItemList";
+import { getAllPost } from "@/lib/posts";
 
-export default function Main() {
-  const articles = getCategoriesdArticles()
+export default async function Main() {
+
+  const post = await getAllPost();
 
   return (
     <section className="mx-auto w-11/12 md:w-1/2 mt-20 flex flex-col gap-16 mb-20">
@@ -10,14 +11,7 @@ export default function Main() {
         <h1>minimal blog</h1>
       </header>
       <section className="md:grid md:grid-cols-2 flex flex-col gap-10">
-        {articles !== null &&
-          Object.keys(articles).map((article) => (
-            <ArticleItemList
-              category={article}
-              articles={articles[article]}
-              key={article}
-            />
-          ))}
+        <PostItemList post={post} />
       </section>
     </section>
   )
