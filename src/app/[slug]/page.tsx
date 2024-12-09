@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { getPostDetail } from "@/lib/posts"
 import MDXContent from "@/components/postContent"
+import '@/app/globals.css'
 
 const PostDetail = async ({
     params
