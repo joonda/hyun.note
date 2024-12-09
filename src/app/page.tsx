@@ -1,9 +1,9 @@
 import PostItemList from "@/components/postItemList";
-import { getAllPost } from "@/lib/posts";
+import { getPostList } from "@/lib/posts";
 
 export default async function Main() {
 
-  const post = await getAllPost();
+  const post = await getPostList();
 
   return (
     <section className="mx-auto w-11/12 md:w-1/2 mt-20 flex flex-col gap-16 mb-20">

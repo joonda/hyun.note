@@ -16,6 +16,26 @@ export type postItem = {
     contentHtml?: MDXRemoteSerializeResult;
 }
 
+// getPostList
+export const getPostList = async () => {
+    const fileNames = fs.readdirSync(postsDirectory);
+    const allPostData = fileNames.map((fileName) => {
+        const id = fileName.replace(/\.mdx$/, "");
+        const fullPath = path.join(postsDirectory, fileName);
+        const fileContents = fs.readFileSync(fullPath, 'utf-8');
+        const { data } = matter(fileContents);
+
+        return {
+            id,
+            title: data.title,
+            date: data.date,
+            category: data.category
+        };
+    });
+
+    return allPostData;
+}
+
 export const getPostData = async (slug: string): Promise<postItem> => {
 
     // read file in posts Directory folder 
@@ -36,23 +56,4 @@ export const getPostData = async (slug: string): Promise<postItem> => {
         category: data.category,
         contentHtml: mdxSource
     }
-}
-
-export const getAllPost = async () => {
-    const fileNames = fs.readdirSync(postsDirectory);
-    const allPostData = fileNames.map((fileName) => {
-        const id = fileName.replace(/\.mdx$/, "");
-        const fullPath = path.join(postsDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, 'utf-8');
-        const { data } = matter(fileContents);
-
-        return {
-            id,
-            title: data.title,
-            date: data.date,
-            category: data.category
-        };
-    });
-
-    return allPostData;
 }
