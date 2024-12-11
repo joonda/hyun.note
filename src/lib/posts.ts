@@ -41,6 +41,10 @@ export const getPostList = async (): Promise<PostDesc[]> => {
         return postList;
     });
 
+    // 최신순 정렬
+
+    allPostData.sort((a, b) => b.date.getTime() - a.date.getTime())
+
     return allPostData;
 }
 

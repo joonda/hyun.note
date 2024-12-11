@@ -1,7 +1,6 @@
 import PostContent from "@/components/postContent";
 import { getPostDetail } from "@/lib/posts";
 
-
 const PostDetail = async ({
     params
 }: {
