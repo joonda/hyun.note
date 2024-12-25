@@ -68,6 +68,6 @@ export const getPostDetail = async (slug: string): Promise<AllPostContents> => {
         title: data.title,
         date: new Date (data.date),
         category: data.category,
-        contentHtml: mdxSource
+        contentSource: mdxSource
     }
 }

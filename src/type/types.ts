@@ -8,7 +8,7 @@ export interface PostDesc {
 };
 
 export interface PostDetail {
-    contentHtml: MDXRemoteSerializeResult;
+    contentSource: MDXRemoteSerializeResult;
 };
 
 export interface AllPostContents extends PostDesc, PostDetail {};

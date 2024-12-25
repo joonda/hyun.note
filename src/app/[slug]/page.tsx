@@ -1,5 +1,8 @@
-import PostContent from "@/components/postContent";
-import { getPostDetail } from "@/lib/posts";
+import Link from "next/link"
+import { getPostDetail } from "@/lib/posts"
+import MDXContent from "@/components/postContent"
+import { AllPostContents } from "@/type/types"
+import '@/app/globals.css'
 
 const PostDetail = async ({
     params
@@ -7,10 +10,19 @@ const PostDetail = async ({
     params: { slug: string }
 }) => {
     const { slug } = await params;
-    const PostDetail = await getPostDetail(slug);
+    const articleData: AllPostContents = await getPostDetail(slug);
     return (
-        <PostContent PostDetail={PostDetail} />
+        <section className="mx-auto w-10/12 md:w-1/2 mt-20 flex flex-col gap-5">
+            <div className="flex justify-between font-poppins">
+                <Link href={"/"} className="flex flex-row gap-1 place-items-center">
+                    <p>back to home</p>
+                </Link>
+                <p>{articleData.date.toLocaleDateString()}</p>
+            </div>
+            <article className="prose">
+                <MDXContent source={articleData} />
+            </article>
+        </section>
     )
 }
-
 export default PostDetail
