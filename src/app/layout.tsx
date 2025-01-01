@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/layouts/Header";
+import Footer from "@/layouts/footer";
 
 export const metadata: Metadata = {
   title: "Hyun.note",
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

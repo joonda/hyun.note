@@ -19,9 +19,11 @@ const PostDetail = async ({
                 </Link>
                 <p>{articleData.date.toLocaleDateString()}</p>
             </div>
-            <article className="prose">
-                <MDXContent source={articleData} />
-            </article>
+            <div className="flex justify-center mt-20">
+                <article className="prose">
+                    <MDXContent source={articleData} />
+                </article>
+            </div>
         </section>
     )
 }
