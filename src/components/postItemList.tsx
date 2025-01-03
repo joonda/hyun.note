@@ -8,15 +8,22 @@ const PostItemList = ({ postlist }: { postlist: PostDesc[] }) => {
     <div>
       {
         postlist.map((item) => {
-
           return (
-            
-            <div key={item.id}>
-              <Link href={`/${item.id}`}>
+            <div key={item.id}
+              className="mb-10 flex flex-col gap-2"
+            >
+              <p
+                className="text-base font-medium leading-6 text-gray-500"
+              >{item.date.toLocaleDateString()}</p>
+              <Link href={`/blog/${item.id}`}
+                className="text-3xl"
+              >
                 {item.title}
               </Link>
-              <p>{item.date.toLocaleDateString()}</p>
-              <p>{item.category}</p>
+
+              <p
+                className="text-cyan-800"
+              >{item.category}</p>
             </div>
           )
         })
