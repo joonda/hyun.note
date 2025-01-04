@@ -3,7 +3,7 @@ title: "TIL-250104"
 category: "JavaScript"
 date: "01-04-2025"
 ---
-# TIL [형변환, 비동기 프로그래밍, 객체지향 프로그래밍]
+# TIL [형변환, 비동기 프로그래밍, 객체지향 프로그래밍, fetch]
 
 ## 암시적 형변환
 * 데이터 크기를 자동으로 확장하는 것을 뜻한다. 순서는 Boolean -> Number -> String 순이다.
@@ -141,5 +141,67 @@ Animal.prototype.speak = function() {
 
 const dog = new Animal("Dog");
 dog.speak(); // Dog
-
 ~~~
+
+## fetch
+* HTTP Method + JSON (혹은 XML)
+* fetch는 자동으로 Promise 객체를 반환.
+* then(), catch() 등으로 콜백 및 에러 처리를 진행.
+
+### POST
+* 프론트엔ㄷ -> 백엔드로 데이터 전송
+* 주요 용도 : CREATE
+* 보안 유지를 위해 사용 (URL에 데이터 노출 X)
+    * URL에 포함할 수 없는 크고 복잡한 데이터를 담을 수 있음.
+* 데이터를 body에 담아 전송.
+~~~
+fetch("https://korean-advice-open-api.vercel.app/api/advice", {
+    method: "POST",
+    headers: {
+        'Content-Type': "application/json"
+    },
+    body: JSON.stringify({
+        name: "black",
+        age: 32,
+    }),
+})
+    .then(response => response.json())
+    .then(data => {
+        console.log("Success", data);
+    })
+    .catch(error => {
+        console.error("Error: ", error);
+    });
+~~~
+
+### GET
+* 백엔드 -> 프론트엔드로 데이터 전송
+* 주요 용도 : READ
+* URL에 Key, Value가 노출 -> 보안이 필요 없는 데이터에 적합.
+~~~
+fetch("https://korean-advice-open-api.vercel.app/api/advice", {
+    method: "GET",
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network Error");
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.querySelector('.helperText').innerHTML = data.author;
+        console.log(data);
+    })
+    .catch(error => {
+        console.error("Fetch Error: " + error);
+    });
+~~~
+
+### PUT
+* 주요 용도 : UPDATE (수정)
+* 수정할 데이터를 body에 포함.
+
+### DELETE
+* 주요 용도 : DELETE (삭제)
+* 서버에서 데이터를 삭제할 때 사용.
+* 일반적으로 삭제 대상의 ID를 포함.
