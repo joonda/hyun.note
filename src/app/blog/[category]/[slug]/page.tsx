@@ -7,10 +7,10 @@ import '@/app/globals.css'
 const PostDetail = async ({
     params
 }: {
-    params: { slug: string }
+    params: { category: string, slug: string }
 }) => {
-    const { slug } = await params;
-    const articleData: AllPostContents = await getPostDetail(slug);
+    const { slug, category } = await params;
+    const articleData: AllPostContents = await getPostDetail(category, slug);
     return (
         <section className="flex flex-col gap-5 mt-20 max-w-5xl mx-auto">
             <div className="flex justify-between">

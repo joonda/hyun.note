@@ -3,34 +3,36 @@ import matter from "gray-matter";
 import path from "path";
 import { serialize } from "next-mdx-remote/serialize";
 import { AllPostContents, PostDesc } from "@/type/types"
+import {sync} from 'glob';
 
 
 // 마크다운 포스트 경로 지정
-const postsDirectory = path.join(process.cwd(), 'src', "posts")
+const POST_PATH = path.join(process.cwd(), 'src', "posts")
+
+export const getPostPaths = (category?: string) => {
+    const folder = category || '**';
+    const postPaths: string[] = sync(`${POST_PATH}/${folder}/**/*.mdx`);
+    return postPaths
+}
 
 // 글 목록을 가져오기 위한 함수 지정
 export const getPostList = async (): Promise<PostDesc[]> => {
-    // postsDirectory 안에 있는 마크다운 파일을 가져옴
-    // 배열 형태
-    const fileNames = fs.readdirSync(postsDirectory);
-
+    
+    // 파일 경로를 배열 형태로 받는다
+    const fileNames = getPostPaths();
     // map 함수 활용
     const allPostData = fileNames.map((fileName) => {
 
-        // .mdx 확장자 제거 (id로 사용.)
-        const id = fileName.replace(/\.mdx$/, "");
-
-        // path.join 활용 마크다운 포스트 가져옴.
-        // src/posts/@@@.mdx
-        const fullPath = path.join(postsDirectory, fileName);
-
-        // path 안에 있는 마크다운 파일들 순차적으로 read.
-        const fileContents = fs.readFileSync(fullPath, 'utf-8');
+        // path.basename -> 각각의 파일 경로 중에서 mdx 확장자의 파일 이름만 받는다.
+        const id = path.basename(fileName, '.mdx');
+        
+        // 각각의 mdx 확장자 파일을 읽는다.
+        const fileContents = fs.readFileSync(fileName, 'utf-8');
 
         // matter 활용, description (YAML 파일)
         const { data } = matter(fileContents);
         
-        // any 타입을 막기위해 type 지정 (all string.)
+        // any 타입을 막기위해 type 지정
         const postList: PostDesc = {
             id,
             title: data.title,
@@ -48,14 +50,14 @@ export const getPostList = async (): Promise<PostDesc[]> => {
     return allPostData;
 }
 
-// slug를 받아 포스트의 상세페이지를 반환하는 함수.
-export const getPostDetail = async (slug: string): Promise<AllPostContents> => {
+// slug와 카테고리를 받아 포스트의 상세페이지를 반환하는 함수.
+export const getPostDetail = async (category: string, slug: string): Promise<AllPostContents> => {
 
     // 슬러그와 포스트 디렉토리 경로 결합, 전체 파일 경로 만듦.
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
+    const filePath = `${POST_PATH}/${category}/${slug}.mdx`;
 
     // 디렉토리 안에있는 mdx 파일을 읽음.
-    const fileContents = fs.readFileSync(fullPath, 'utf-8')
+    const fileContents = fs.readFileSync(filePath, 'utf-8')
 
     // gray-matter 활용, data, content 반환.
     const { data, content } = matter(fileContents)

@@ -1,0 +1,126 @@
+---
+title: "TIL-250106"
+category: "Java"
+date: "01-06-2025"
+---
+# TIL [Scope와 static]
+
+## Scope
+* 변수가 선언된 위치에 따라 사용할 수 있는 범위가 결정된다.
+
+### 전역 변수
+* 클래스의 가장 바깥 영역에서 선언된 변수, 클래스 어디서든 접근 가능.
+* static 키워드를 사용하여 선언된 전역 변수는 모든 인스턴스에서 공유됨.
+
+~~~
+public class WaterBottle {
+	static int sharedWater = 10; // 전역 변수
+
+	public void drinkWater(int amount) {
+		int remainingWater = sharedWater - amount; // 지역 변수
+		sharedWater = remainingWater;
+		System.out.println("남은 물 : " + remainingWater);
+	}
+
+	public static void main(String[] args) {
+		WaterBottle person1 = new WaterBottle();
+		WaterBottle person2 = new WaterBottle();
+
+		person1.drinkWater(3);
+		person2.drinkWater(2);
+	}
+}
+~~~
+### 지역 변수
+* 특성 메서드나 블록 안에서 선언된 변수, 해당 영역을 벗어나면 접근 불가.
+~~~
+public class ScopeExample {
+	public static void main(String[] args) {
+		int x = 10; // 지역 변수
+		if (x == 10) {
+			int y = 20; // 블록 변수
+			System.out.println("블록 안 변수 y : " + y);
+		}
+		// System.out.println(y); // 오류: y는 블록 밖에서 사용할 수 없음
+	}
+}
+~~~
+### 객체와 메모리
+* 전역 또는 지역 변수를 객체로 관리하면 더 넓은 범위에서 데이터를 활용할 수 있다.
+* 객체는 JVM의 힙 영역에 데이터가 저장되고, 스택 영역에서 객체의 참조 주소가 저장된다.
+~~~
+public class FirstClass {
+	public int getLocalValue() {
+		int localVar = 42;
+		return localVar;
+	}
+}
+
+public class SecondClass {
+	public static void main(String[] args) {
+		FirstClass first = new FirstClass(); // 객체 생성
+		int value = first.getLocalValue();
+		System.out.println("class value : " + value);
+	}
+}
+~~~
+
+## static
+* static 으로 선언된 변수나 메서드는 객체를 생성하지 않고, 클래스 명으로 직접 접근 할 수 있다.
+* static 변수는 프로그램 종료 시까지 메모리에 남아 데이터가 유지.
+
+### 장점 
+* 모든 객체가 공유하는 값이 필요할 때 사용
+* 객체를 생성하지 않아도 사용할 수 있어 편리.
+
+### 단점
+* 메모리 낭비가 발샌
+* 메모리 효율 저하
+
+~~~
+public class StaticExample {
+	static int sharedValue = 100; // static 변수
+
+	public static void main(String[] args) {
+		System.out.println("Shared Value: " + StaticExample.sharedValue);
+	}
+}
+~~~
+
+## 정리
+* 전역 변수는 모든 메서드와 객체에서 접근 가능하며, static을 활용하면 클래스 차원에서 공유 가능.
+* 지역 변수는 블록 내에서만 사용 가능 
+* 객체는 데이터를 효율적으로 관리, JVM의 힙과 스택 영역에 저장
+* static은 공유자원에 관리에 유용, 메모리 낭비가 심할 수 있다.
+
+### 참고 사항
+* 일반 전역 변수와 static 선언된 전역 변수의 차이
+* static 전역 변수는 모든 객체가 공유되고, 일반 전역 변수는 객체마다 독립적인 값을 가진다.
+~~~
+public class VariableExample {
+	// static 전역 변수 (모든 객체가 공유)
+	static int sharedValue = 0; 
+	
+	// 일반 전역 변수 (객체마다 독립적)
+	int individualValue = 0;
+
+	public static void main(String[] args) {
+		// 첫 번째 객체 생성
+		VariableExample obj1 = new VariableExample();
+		obj1.sharedValue += 1;  // static 변수 값 증가
+		obj1.individualValue += 1; // 객체별 변수 값 증가
+		
+		// 두 번째 객체 생성
+		VariableExample obj2 = new VariableExample();
+		obj2.sharedValue += 1;  // static 변수 값 증가
+		obj2.individualValue += 1; // 객체별 변수 값 증가
+
+		// 결과 출력
+		System.out.println("obj1.sharedValue: " + obj1.sharedValue); // 2
+		System.out.println("obj1.individualValue: " + obj1.individualValue); // 1
+		System.out.println("obj2.sharedValue: " + obj2.sharedValue); // 2 (공유됨)
+		System.out.println("obj2.individualValue: " + obj2.individualValue); // 1 (독립적)
+	}
+}
+
+~~~

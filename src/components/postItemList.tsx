@@ -2,9 +2,7 @@ import Link from "next/link";
 import { PostDesc } from "@/type/types"
 
 const PostItemList = ({ postlist }: { postlist: PostDesc[] }) => {
-
   return (
-
     <div>
       {
         postlist.map((item) => {
@@ -15,7 +13,7 @@ const PostItemList = ({ postlist }: { postlist: PostDesc[] }) => {
               <p
                 className="text-base font-medium leading-6 text-gray-500"
               >{item.date.toLocaleDateString()}</p>
-              <Link href={`/blog/${item.id}`}
+              <Link href={`/blog/${item.category}/${item.id}`}
                 className="text-3xl"
               >
                 {item.title}
