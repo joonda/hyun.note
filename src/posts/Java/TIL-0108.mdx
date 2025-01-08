@@ -1,0 +1,82 @@
+---
+title: "TIL-250108"
+category: "Java"
+date: "01-08-2025"
+---
+# TIL [Interface, Abstract Class]
+
+## Interface
+* 인터페이스는 추상 메서드 만을 포함할 수 있는 특수한 형태의 클래스, 일관성 유지에 유용하다.
+
+### 특징
+* 추상 메서드만 정의할 수 있음. (구현은 자식 클래스에서 진행)
+* 다중 상속을 지원 (하나의 클래스가 여러 인터페이스를 구현 가능)
+
+
+~~~
+// 인터페이스 정의
+interface Animal {
+    void sound(); // 추상 메서드 (구현은 구현 클래스에서)
+}
+
+interface Humans {
+    void walk(); // 추상 메서드
+}
+
+// 인터페이스 구현 클래스
+class Dog implements Animal, Humans {
+    @Override
+    public void sound() {
+        System.out.println("Doggy sound!");
+    }
+
+    @Override
+    public void walk() {
+        System.out.println("Walking on the Street");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.sound(); // Doggy sound!
+        dog.walk();  // Walking on the Street
+    }
+}
+~~~
+
+## Abstract Class
+* 추상 클래스는 추상 메서드와 구현된 메서드를 함께 가질 수 있는 클래스
+* 추상 메서드는 자식 클래스에서 구현, 일반 메서드는 바로 사용 가능.
+
+### 특징
+* 추상 메서드와 일반 메서드 혼합 사용.
+* 단일 상속만 가능 (하나의 클래스로부터만 상속 가능 1대1, 1대다)
+* 인스턴스화 할 수 없고, 반드시 자식 클래스를 통해 객체 생성.
+
+~~~
+// 추상 클래스 정의
+abstract class Animal {
+    abstract void sound();  // 추상 메서드 (자식 클래스에서 구현)
+    
+    void sleep() {  // 일반 메서드
+        System.out.println("Sleeping");
+    }
+}
+
+// 추상 클래스를 상속받은 자식 클래스
+class Dog extends Animal {
+    @Override
+    public void sound() {
+        System.out.println("Bark");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.sound();  // Bark
+        dog.sleep();  // Sleeping
+    }
+}
+~~~
