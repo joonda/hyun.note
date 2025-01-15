@@ -1,0 +1,79 @@
+---
+title: "TIL-250115"
+category: "Java"
+date: "01-15-2025"
+---
+# TIL [Spring Boot]
+
+## Install
+* Eclipse
+    * Help -> Eclipse Marketplace -> SpringBoot Tools 검색 -> 최신버전 다운
+
+## Spring Initializr
+* [Spring Initializr](https://start.spring.io/)
+* Java 버전, Dependencies 꼭 확인 할 것!
+
+## properties
+* src/main/resources/application.properties 수정
+~~~
+# Spring security
+spring.security.user.name=1
+spring.security.user.password=1
+
+# Page Controll part
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+
+# 수정 시, 자동 restart (확인 하기에 좋음.)
+spring.devtools.livereload.enabled=true
+spring.devtools.restart.enabled=true
+~~~
+
+## Page Controll
+* controller(package) -> PageController.java 
+* GetMapping 활용
+* "/"은  localhost:8080을 의미한다.
+* properties 부분에서 view의 preifx, suffix를 수정했기 때문에, return에 해당하는 경로에 있는 jsp 파일을 불러온다.
+~~~
+package com.hyun.spring_project1.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class PageController {
+	
+	@GetMapping("/")
+	// localhost:8080 -> "/"
+	public String returnHome() {
+		return "index";
+	}
+	
+	// page 이동시, GetMapping을 사용한다!
+	
+	// => localhost:8080/register
+	@GetMapping("/register")	
+	public String registerPage() {
+		return "register/index";
+	}
+	// => localhost:8080/loginPage	
+	@GetMapping("/loginPage")
+	public String loginPage() {
+		return "login/index";
+	}
+}
+~~~
+
+## foldering
+* src/main에 webapp/resources과 webapp/WEB-INF 폴더링을 기본으로 진행.
+* resources 부분에는 css/js, WEB-INF 에는 view 폴더를 만들어 jsp파일을 넣어둔다 (jsp는 java+HTML)
+* jsp 파일안에 include 구문을 추가, 다른 jsp파일을 추가할 수 있다 (header, footer 등)
+~~~
+# index.jsp
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+~~~
+* jsp 파일 안에 css를 첨부할 때는, 아래 설정 참고
+~~~
+# header.jsp
+<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/resources/css/common/header.css">
+~~~
