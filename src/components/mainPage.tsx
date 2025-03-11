@@ -8,7 +8,7 @@ export default async function MainPage() {
 
   return (
     <section className="flex max-w-5xl mx-auto gap-16 mt-10">
-      <div className="w-1/4 bg-gray-50 p-8">
+      <div className="w-1/4 bg-gray-50 p-4">
         <p>Tag List</p>
       </div>
       <section className="w-3/4 p-8">

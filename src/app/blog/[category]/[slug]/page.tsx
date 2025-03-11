@@ -13,7 +13,7 @@ const PostDetail = async ({
     const articleData: AllPostContents = await getPostDetail(category, slug);
     return (
         <section className="flex flex-col gap-5 mt-20 max-w-5xl mx-auto">
-            <div className="flex justify-between">
+            <div className="flex justify-between p-4">
                 <Link href={"/blog"} className="flex flex-row gap-1 place-items-center">
                     <p>back to home</p>
                 </Link>
