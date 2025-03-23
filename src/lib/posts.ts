@@ -7,7 +7,8 @@ import {sync} from 'glob';
 
 
 // 마크다운 포스트 경로 지정
-const POST_PATH = path.join(process.cwd(), 'src', "posts")
+const BASE_PATH = "src/posts"
+const POST_PATH = path.join(process.cwd(), BASE_PATH)
 
 export const getPostPaths = (category?: string) => {
     const folder = category || '**';
@@ -15,11 +16,26 @@ export const getPostPaths = (category?: string) => {
     return postPaths
 }
 
+export const getCategories = (): string[] => {
+    const postPaths: string[] = sync(`${POST_PATH}/**/*.mdx`); // 모든 마크다운 파일 경로 가져오기
+    const categories: Set<string> = new Set(); // 중복을 피하기 위해 Set 사용
+  
+    postPaths.forEach((filePath) => {
+      const fileContents = fs.readFileSync(filePath, 'utf-8');
+      const { data } = matter(fileContents); // `gray-matter`를 사용해 마크다운 파일에서 metadata를 가져옴
+      if (data.category) {
+        categories.add(data.category); // 카테고리가 존재하면 Set에 추가
+      }
+    });
+  
+    return Array.from(categories); // Set을 배열로 변환해서 반환
+  };
+
 // 글 목록을 가져오기 위한 함수 지정
-export const getPostList = async (): Promise<PostDesc[]> => {
+export const getPostList = async (category?: string): Promise<PostDesc[]> => {
     
     // 파일 경로를 배열 형태로 받는다
-    const fileNames = getPostPaths();
+    const fileNames = getPostPaths(category);
     // map 함수 활용
     const allPostData = fileNames.map((fileName) => {
 
